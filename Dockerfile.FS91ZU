@@ -1,0 +1,25 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS builder
+
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+
+RUN git clone https://github.com/szabojuci/Felhoalapu01.git .
+
+WORKDIR /src/WebAPI
+
+RUN dotnet restore
+RUN dotnet publish -c Release -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+
+WORKDIR /app
+
+COPY --from=builder /app/publish .
+
+ENV ASPNETCORE_URLS=http://+:8080
+ENV PORT=8080
+
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "WebAPI.dll"]
