@@ -8,8 +8,8 @@ RUN git clone https://github.com/szabojuci/Felhoalapu01.git .
 
 WORKDIR /src/WebAPI
 
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet restore "WebAPI.csproj"
+RUN dotnet publish "WebAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 
